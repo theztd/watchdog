@@ -10,13 +10,32 @@ import (
 func Run(data *probes.Status) {
 	http.HandleFunc("/_healthz/live", func(w http.ResponseWriter, r *http.Request) {
 		data := data.Filter("live")
+
+		respStatus := 200
+		for _, v := range data {
+			if v.LastStatus != "Ok" {
+				respStatus = 503
+				break
+			}
+		}
+
+		w.WriteHeader(respStatus)
 		json.NewEncoder(w).Encode(data)
 
 	})
 
 	http.HandleFunc("/_healthz/ready", func(w http.ResponseWriter, r *http.Request) {
 		data := data.Filter("ready")
-		log.Println(data)
+
+		respStatus := 200
+		for _, v := range data {
+			if v.LastStatus != "Ok" {
+				respStatus = 503
+				break
+			}
+		}
+
+		w.WriteHeader(respStatus)
 		json.NewEncoder(w).Encode(data)
 
 	})

@@ -12,14 +12,14 @@ rules:
   required:
   - ready
   - live
-- name: broken-tcp-ping-port
-  errorMsg: root.cz does not respond on port 8880
-  address: 91.213.160.188
-  port: 8880
-  method: ping
-  required:
-  - ready
-  - live
+# - name: broken-ping-port
+#   errorMsg: root.cz does not respond on port 8880
+#   address: 91.213.160.188
+#   port: 8880
+#   method: ping
+#   required:
+#   - ready
+#   - live
 - name: google-dns
   errorMsg: Network is unreachable
   address: 8.8.8.8
@@ -32,9 +32,9 @@ rules:
   method: http-get
   required:
   - ready
-- name: broken-http-ping
-  errorMsg: Check HTTPS on www.seznam.cz
-  address: https://www.seznamsss.cz/
-  method: http-get
-  required:
-  - ready
+# - name: broken-http-ping
+#   errorMsg: Check HTTPS on www.seznam.cz
+#   address: https://www.seznamsss.cz/
+#   method: http-get
+#   required:
+#   - ready

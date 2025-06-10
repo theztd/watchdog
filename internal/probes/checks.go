@@ -33,6 +33,7 @@ func RunCheckingAgent(cfg config.Config, status *Status) {
 		wg.Wait()
 		close(resultsCh)
 
+		// Vysledky vsech checku zpracovavam jak dorazi
 		for res := range resultsCh {
 			if res.Status != nil {
 				status.Update(res.Rule, res.Status.Error())
