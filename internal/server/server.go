@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"theztd/watchdog/internal/probes"
+	"time"
 )
 
 func Run(data *probes.Status) {
@@ -20,14 +21,17 @@ func Run(data *probes.Status) {
 		}
 
 		w.WriteHeader(respStatus)
-		json.NewEncoder(w).Encode(data)
+		err := json.NewEncoder(w).Encode(data)
+		if err != nil {
+			log.Println("ERR [server.live]: ", err)
+		}
 
 	})
 
 	http.HandleFunc("/_healthz/ready", func(w http.ResponseWriter, r *http.Request) {
 		data := data.Filter("ready")
 
-		respStatus := 200
+		var respStatus int = 200
 		for _, v := range data {
 			if v.LastStatus != "Ok" {
 				respStatus = 503
@@ -36,11 +40,22 @@ func Run(data *probes.Status) {
 		}
 
 		w.WriteHeader(respStatus)
-		json.NewEncoder(w).Encode(data)
+		err := json.NewEncoder(w).Encode(data)
+		if err != nil {
+			log.Println("ERR [server.live]: ", err)
+		}
 
 	})
 
-	if err := http.ListenAndServe(":8080", nil); err != nil {
+	srv := &http.Server{
+		Addr:         ":8080",
+		Handler:      nil, // nebo tvůj mux
+		ReadTimeout:  500 * time.Millisecond,
+		WriteTimeout: 100 * time.Millisecond,
+		IdleTimeout:  5 * time.Second,
+	}
+
+	if err := srv.ListenAndServe(); err != nil {
 		log.Printf("HTTP server error: %v\n", err)
 	}
 }
