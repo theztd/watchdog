@@ -1,12 +1,22 @@
-# Chuvicka
+# Watchdog
 
 Kontroluje nakonfigurovane zavislosti a na zaklade testu, upravuje stav prob.
 
+## Run
+```bash
+./watchdog -cfg example.yaml
+```
+
+
+## REST Endpointy
+```yaml
+GET: /_healthz/live
+GET: /_healthz/ready
+```
 
 
 
 ## Konfiguracni jazyk
-
 ```yaml
 port: 8080
 checkIntervalSec: 10
@@ -53,8 +63,6 @@ rules:
 
 ## TODO
 
- - live proba bude vracet 200 jen kdyz vsechny rule s required obsahujicim live budou OK (ted to nefunguje)
- - ready proba bude vracet 200 jen kdyz vsechny rule s required obsahujicim ready budou OK (ted to nefunguje)
  - validator yamlu (vubec nic ted nekontroluju)
  - doplneni DNS kontroly
  - sjednoceni logovani
