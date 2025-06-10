@@ -17,7 +17,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.22'
+          go-version: '1.23'
 
       - name: Run govulncheck
         run: |
@@ -26,9 +26,10 @@ jobs:
           govulncheck ./... > govulncheck-report.txt || true
           issues=$(grep -c '"OSV"' govulncheck-report.txt || true)
           if [ "$issues" -eq "0" ]; then
-            echo "govulncheck: OK (0 issues)"
+            echo "govulncheck: OK (0 issues)" >> $GITHUB_STEP_SUMMARY
           else
-            echo "govulncheck: FAIL ($issues issues)"
+            echo "govulncheck: FAIL ($issues issues)" >> $GITHUB_STEP_SUMMARY
+            cat govulncheck-report.txt
           fi
 
       - name: Run gosec
@@ -38,9 +39,10 @@ jobs:
           gosec -fmt json -out gosec-report.json ./... || true
           issues=$(grep -o '"severity":' gosec-report.json | wc -l || true)
           if [ "$issues" -eq "0" ]; then
-            echo "gosec: OK (0 issues)"
+            echo "gosec: OK (0 issues)" >> $GITHUB_STEP_SUMMARY
           else
-            echo "gosec: FAIL ($issues issues)"
+            echo "gosec: FAIL ($issues issues)" >> $GITHUB_STEP_SUMMARY
+            cat gosec-report.json
           fi
 
       - name: Run staticcheck
@@ -50,7 +52,8 @@ jobs:
           staticcheck -f json ./... > staticcheck-report.json || true
           issues=$(grep -o '"code":' staticcheck-report.json | wc -l || true)
           if [ "$issues" -eq "0" ]; then
-            echo "staticcheck: OK (0 issues)"
+            echo "staticcheck: OK (0 issues)" >> $GITHUB_STEP_SUMMARY
           else
-            echo "staticcheck: FAIL ($issues issues)"
+            echo "staticcheck: FAIL ($issues issues)" >> $GITHUB_STEP_SUMMARY
+            cat staticcheck-report.json
           fi

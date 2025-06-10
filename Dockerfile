@@ -1,12 +1,12 @@
 ## Build
-FROM golang:1.22-bookworm AS build
+FROM golang:1.23-bookworm AS build
 
 
 COPY . /usr/src/watchdog/
 
 WORKDIR /usr/src/watchdog
 
-RUN go build -o /usr/local/bin/watchdog .
+RUN go build -o /usr/local/bin/watchdog
 
 
 ## Deploy
